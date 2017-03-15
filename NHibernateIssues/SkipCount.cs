@@ -14,8 +14,8 @@ namespace NHibernateIssues
 {
     public class SkipCount : IDisposable
     {
-        private const string ConnectionString = "Data Source=:memory:;Version=3;New=True;";
-        private const string Mapping = @"<?xml version=""1.0"" encoding=""utf-8""?>
+        const string ConnectionString = "Data Source=:memory:;Version=3;New=True;";
+        const string Mapping = @"<?xml version=""1.0"" encoding=""utf-8""?>
 <hibernate-mapping xmlns=""urn:nhibernate-mapping-2.2"" assembly=""NHibernateIssues"">
    <class name=""NHibernateIssues.MyClass"" table=""MyClass"">
       <id name=""Id"" type=""int"" column=""id"">
@@ -25,8 +25,8 @@ namespace NHibernateIssues
    </class>
 </hibernate-mapping>";
 
-        private readonly IDbConnection connection = new SQLiteConnection(ConnectionString);
-        private readonly ISession session;
+        readonly IDbConnection connection = new SQLiteConnection(ConnectionString);
+        readonly ISession session;
 
         public SkipCount()
         {

@@ -22,8 +22,8 @@ namespace NHibernateIssues
       <generator class=""native""/>
     </id>
 
-    <component name=""Component"" class=""NHibernateIssues.SecondLevelClassWithComponent"">
-      <component name=""Component"" class=""NHibernateIssues.DerivativeComponent"">
+    <component name=""Component"" class=""NHibernateIssues.AbstractComponent"">
+      <component name=""Component"" class=""NHibernateIssues.SecondLevelClassWithComponent"">
         <property name=""Foo"" />
       </component>
     </component>
@@ -59,7 +59,7 @@ namespace NHibernateIssues
         [Fact]
         public void Pops()
         {
-            session.Save(new TopLevelClassWithComponent {Component = new SecondLevelClassWithComponent {Component = new DerivativeComponent {Foo = "bar"}}});
+            session.Save(new TopLevelClassWithComponent {Component = new DerivativeComponent { Component = new SecondLevelClassWithComponent { Foo = "bar"}}});
             session.Flush();
             session.Clear();
 
@@ -79,17 +79,18 @@ namespace NHibernateIssues
     public class TopLevelClassWithComponent
     {
         public virtual int Id { get; set; }
+        public virtual AbstractComponent Component { get; set; }
+    }
+
+    
+    public class AbstractComponent
+    {
+        public virtual int Id { get; set; }
+
         public virtual SecondLevelClassWithComponent Component { get; set; }
     }
 
     public class SecondLevelClassWithComponent
-    {
-        public virtual int Id { get; set; }
-
-        public virtual AbstractComponent Component { get; set; }
-    }
-
-    public abstract class AbstractComponent
     {
         public virtual string Foo { get; set; }
     }

@@ -91,6 +91,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbstractCompositeKey.cs" />
     <Compile Include="NestedComponents.cs" />
     <Compile Include="SkipCount.cs" />
   </ItemGroup>

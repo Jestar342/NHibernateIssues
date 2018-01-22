@@ -61,17 +61,7 @@ namespace NHibernateIssues
             session = sessionFactory.OpenSession(connection);
 
             new SchemaExport(configuration).Execute(false, true, false, connection, Console.Out);
-        }
 
-        public void Dispose()
-        {
-            session?.Dispose();
-            connection?.Dispose();
-        }
-
-        [Fact]
-        public void Breaks()
-        {
             var idOne = new KeyClass { Id = Guid.NewGuid() };
             var idTwo = new KeyClass { Id = Guid.NewGuid() };
 
@@ -87,11 +77,38 @@ namespace NHibernateIssues
 
             session.Flush();
             session.Clear();
+        }
 
+        public void Dispose()
+        {
+            session?.Dispose();
+            connection?.Dispose();
+        }
+
+        [Fact]
+        public void Linq()
+        {
             var things = session.Query<AbstractClass>().ToArray();
 
             Assert.Single(things);
         }
+
+        [Fact]
+        public void Criteria()
+        {
+            var thing = session.CreateCriteria<AbstractClass>().UniqueResult<AbstractClass>();
+
+            Assert.NotNull(thing);
+        }
+
+        [Fact]
+        public void QueryOver()
+        {
+            var thing = session.QueryOver<AbstractClass>().SingleOrDefault();
+
+            Assert.NotNull(thing);
+        }
+
     }
 
     public abstract class AbstractClass : IEquatable<AbstractClass>

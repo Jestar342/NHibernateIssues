@@ -14,30 +14,6 @@ namespace NHibernateIssues
 {
     public class AbstractCompositeKey : IDisposable
     {
-        [Fact]
-        public void Breaks()
-        {
-            var idOne = new KeyClass { Id = Guid.NewGuid() };
-            var idTwo = new KeyClass { Id = Guid.NewGuid() };
-
-            session.Save(idOne);
-            session.Save(idTwo);
-
-            session.Save(
-                new DerivativeOne
-                {
-                    IdOne = idOne,
-                    IdTwo = idTwo
-                });
-
-            session.Flush();
-            session.Clear();
-
-            var things = session.Query<AbstractClass>().ToArray();
-
-            Assert.Single(things);
-        }
-
         const string ConnectionString = "Data Source=:memory:;Version=3;New=True;";
 
         const string Mapping = @"<hibernate-mapping xmlns=""urn:nhibernate-mapping-2.2"">
@@ -92,6 +68,30 @@ namespace NHibernateIssues
             session?.Dispose();
             connection?.Dispose();
         }
+
+        [Fact]
+        public void Breaks()
+        {
+            var idOne = new KeyClass { Id = Guid.NewGuid() };
+            var idTwo = new KeyClass { Id = Guid.NewGuid() };
+
+            session.Save(idOne);
+            session.Save(idTwo);
+
+            session.Save(
+                new DerivativeOne
+                {
+                    IdOne = idOne,
+                    IdTwo = idTwo
+                });
+
+            session.Flush();
+            session.Clear();
+
+            var things = session.Query<AbstractClass>().ToArray();
+
+            Assert.Single(things);
+        }
     }
 
     public abstract class AbstractClass : IEquatable<AbstractClass>
@@ -111,7 +111,7 @@ namespace NHibernateIssues
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj.GetType() != GetType()) return false;
             return Equals((AbstractClass) obj);
         }
 
